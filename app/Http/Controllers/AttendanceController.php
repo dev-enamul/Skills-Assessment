@@ -12,8 +12,8 @@ class AttendanceController extends Controller
 {
     public function punch_in(){
         $attendance_status = EmployeeAttendance::where('user_id',Auth::user()->id)->orderBy('id','desc')->first();
-        if(isset($attendance_status->leave_time) && $attendance_status->leave_time ==null){ 
-            
+        if(isset($attendance_status) && $attendance_status->leave_time ==null){ 
+
             $attendance_status->update(['leave_time'=>new \DateTime('now', new \DateTimezone('Asia/Dhaka'))]); 
             return response()->json([
                 'status' => "success",
