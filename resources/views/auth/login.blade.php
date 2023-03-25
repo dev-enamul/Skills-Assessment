@@ -52,12 +52,12 @@
                  </div>
                  <div class="method">
 
-                     <div class="method-control">
+                     {{-- <div class="method-control">
                          <a href="#" class="method-action">
                              <i class="ion ion-logo-google"></i>
                              <span>Sign in with Google</span>
                          </a>
-                     </div>
+                     </div> --}}
 
                      {{-- <div class="method-control">
                         <a href="#" class="method-action">
