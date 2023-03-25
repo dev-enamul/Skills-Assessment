@@ -12,7 +12,17 @@ class AttendanceController extends Controller
 {
     public function punch_in(){
         $attendance_status = EmployeeAttendance::where('user_id',Auth::user()->id)->orderBy('id','desc')->first();
-        if($attendance_status->leave_time !=null){
+        if(isset($attendance_status->leave_time) && $attendance_status->leave_time ==null){ 
+            
+            $attendance_status->update(['leave_time'=>new \DateTime('now', new \DateTimezone('Asia/Dhaka'))]); 
+            return response()->json([
+                'status' => "success",
+                'message' => "Punch Out Success",
+                'text' =>"Push In"
+            ]);
+
+        }else{
+
             EmployeeAttendance::create([
                 "user_id"=>auth()->user()->id,
                 'attend_time' => new \DateTime('now', new \DateTimezone('Asia/Dhaka')),
@@ -23,13 +33,7 @@ class AttendanceController extends Controller
                 'message' => "Punch In Success",
                 'text' =>"Push Out"
             ]);
-        }else{
-            $attendance_status->update(['leave_time'=>new \DateTime('now', new \DateTimezone('Asia/Dhaka'))]); 
-            return response()->json([
-                'status' => "success",
-                'message' => "Punch Out Success",
-                'text' =>"Push In"
-            ]);
+ 
         }
        
     }

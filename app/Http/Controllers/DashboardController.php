@@ -8,8 +8,9 @@ use Auth;
 class DashboardController extends Controller
 {
     public function index(){
-     
-        if(Auth::user()->type=='admin'){
+      
+
+        if(Auth::user()->type=='admin' || Auth::user()->type==1){
        
             // return view('admin.dashboard');
             return redirect()->route('users');

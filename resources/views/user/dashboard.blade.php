@@ -95,10 +95,11 @@
     </style>
     <div class="push_attent">
         <a>
-            @if($attendance_status->leave_time!=null)
-                <span>Punch In</span>
-            @else 
+            
+            @if(isset($attendance_status->leave_time) && $attendance_status->leave_time==null) 
                 <span>Punch Out</span>
+            @else 
+                <span>Punch In</span>
             @endif
             
             <div class="liquid"></div>
