@@ -11,7 +11,7 @@
      <title>Login | Retinasoft</title>
  </head>
 
- <body>
+ <body> 
      <main class="main">
          <div class="container">
             <img class="img-responsive" style="max-width: 400px" src="{{asset('images/logo/logo.png')}}" alt="">

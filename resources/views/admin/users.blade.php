@@ -115,7 +115,7 @@
                     },
                     {
                         data: 'action',
-                        name: 'sction'
+                        name: 'action'
                     },
                 ]
             });

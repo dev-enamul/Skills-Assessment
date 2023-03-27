@@ -49,8 +49,8 @@
         <th scope="col">#</th>
         <th scope="col">Date</th>
         <th scope="col">In Time</th>
-        <th scope="col">Out Time</th>
-        <th scope="col">Worked</th>
+        <th scope="col">Out Time</th> 
+        <th scope="col">Worked</th> 
       </tr>
     </thead>
     <tbody>
@@ -91,7 +91,7 @@
                     {
                         data: 'out_time',
                         name: 'out_time'
-                    },
+                    } ,
                     {
                         data: 'worked',
                         name: 'worked'

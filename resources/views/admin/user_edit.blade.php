@@ -54,8 +54,10 @@
 
                 <div class="form-group">
                     <label for="">Status</label>
-                    <input type="text" class="form-control" name="phone"
-                        value="{{ Auth::user()->status == 1 ? 'Active' : 'Deactive' }}">
+                    <select name="status" class="form-control" id="">
+                        <option {{$user->status==1?'selected':''}} value="1">Active</option>
+                        <option {{$user->status==0?'selected':''}} value="0">Deactive</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

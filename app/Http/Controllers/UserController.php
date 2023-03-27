@@ -17,10 +17,10 @@ use Carbon\Carbon;
 class UserController extends Controller
 {
     public function index(Request $request){
-
+       
         if ($request->ajax()) {
             $data = User::where('type',0)->select('*')->latest();
-           
+  
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('status', function($row){
@@ -36,6 +36,7 @@ class UserController extends Controller
                         <a href="'.url('view/user/'.$row->id).'"><span class="material-symbols-outlined btn btn-info btn-sm"> visibility </span></a>
                         <span onclick=delete_data('.$row->id.') class="material-symbols-outlined btn btn-danger btn-sm"> delete </span>';
                    })
+               
 
 
                     ->filter(function ($instance) use ($request) {
@@ -224,52 +225,57 @@ class UserController extends Controller
 
 
     public function report(Request $request){
-
-        if ($request->ajax()) {
-         
-            $data = EmployeeAttendance::where('user_id',Auth::user()->id)->latest()->select('*');
       
+        if ($request->ajax()) { 
+            $data = EmployeeAttendance::where('user_id',Auth::user()->id)->latest()->select('*'); 
+            foreach($data as $a){
+                $sec_time = strtotime($a->attend_time) - strtotime($a->leave_time);
+            } 
             return Datatables::of($data)
-                    
-                ->addColumn('date', function($row){
-                    return date('dS M-Y',strtotime($row->created_at));
-                })
+                ->addColumn('date', function($row){  
+                    return date('dS M, Y',strtotime($row->created_at));
+                }) 
+
                 ->addColumn('in_time', function($row){
-                    return date('H:mA',strtotime($row->attend_time)); 
+                    return date('h:i a',strtotime($row->attend_time)); 
                 })
 
                 ->addColumn('out_time', function($row){
                     if($row->leave_time==null){
                         return '';
                     }else{
-                        return date('H:mA',strtotime($row->leave_time)); 
+                        return date('h:i a',strtotime($row->leave_time)); 
                     }
                    
-                })
-
-              ->addColumn('worked', function($row){ 
-                if($row->leave_time==null){
-                    return '';
-                }else{
-                    return date('H:G:i', strtotime($row->leave_time) - strtotime($row->attend_time));
-                }
-                
-                
-                })
-
-                ->filter(function ($instance) use ($request) {
-
-                  
+                }) 
+                ->addColumn('worked', function($row){
+                    if($row->leave_time==null){
+                        $in_time = date_create($row->attend_time);
+                        $out_time = date_create();  
+                        if($out_time->diff($in_time)->format('%h')>1){
+                            return $work_time = $out_time->diff($in_time)->format('%h Hours %i Minutes');
+                        }else{
+                            return $work_time = $out_time->diff($in_time)->format('%i Minutes');
+                        } 
+                      }else{
+                        $in_time = date_create($row->attend_time);
+                        $out_time = date_create($row->leave_time); 
+                         if($out_time->diff($in_time)->format('%h')>1){
+                            return $work_time = $out_time->diff($in_time)->format('%h Hours %i Minutes');
+                        }else{
+                            return $work_time = $out_time->diff($in_time)->format('%i Minutes');
+                        } 
+                     
+                      } 
+                   
+                })  
+                ->filter(function ($instance) use ($request) { 
                     if (!empty($request->get('month'))) {
                         $instance->whereMonth('created_at', date('m',strtotime($request->get('month'))));
-                    } 
-
+                    }  
                 }) 
-
-  
-                     
-
-                    ->rawColumns(['id','date','in_time','out_time','worked'])
+ 
+                    ->rawColumns(['id','date','in_time','out_time'])
                     ->make(true);
         }
 

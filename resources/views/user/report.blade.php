@@ -31,8 +31,7 @@
 @endsection
 
 @section('content')
-<div class="row">
-    
+<div class="row"> 
     <div class="col-md-3"><input type="month" class="form-control mt-3 mb-3" name="" value="{{date('Y-m')}}" id="month"></div>
     <div class="col-md-9"></div>
 </div>
@@ -42,8 +41,8 @@
         <th scope="col">#</th>
         <th scope="col">Date</th>
         <th scope="col">In Time</th>
-        <th scope="col">Out Time</th>
-        <th scope="col">Worked</th>
+        <th scope="col">Out Time</th>  
+        <th scope="col">Worked</th> 
       </tr>
     </thead>
     <tbody>
@@ -88,7 +87,7 @@
                     {
                         data: 'worked',
                         name: 'worked'
-                    } 
+                    }  
                 ]
             });
 

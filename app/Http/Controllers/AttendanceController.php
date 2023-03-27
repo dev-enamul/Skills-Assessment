@@ -14,7 +14,7 @@ class AttendanceController extends Controller
         $attendance_status = EmployeeAttendance::where('user_id',Auth::user()->id)->orderBy('id','desc')->first();
         if(isset($attendance_status) && $attendance_status->leave_time ==null){ 
 
-            $attendance_status->update(['leave_time'=>new \DateTime('now', new \DateTimezone('Asia/Dhaka'))]); 
+            $attendance_status->update(['leave_time'=>date('Y-m-d H:i:s')]); 
             return response()->json([
                 'status' => "success",
                 'message' => "Punch Out Success",
@@ -25,7 +25,7 @@ class AttendanceController extends Controller
 
             EmployeeAttendance::create([
                 "user_id"=>auth()->user()->id,
-                'attend_time' => new \DateTime('now', new \DateTimezone('Asia/Dhaka')),
+                'attend_time' => date('Y-m-d H:i:s'),
             ]);
     
             return response()->json([
@@ -38,7 +38,8 @@ class AttendanceController extends Controller
        
     }
 
-    public function report(Request $request){
+    public function report(Request $request){ 
+  
         if ($request->ajax()) { 
             $data = EmployeeAttendance::where('user_id',Auth::user()->id)->latest()->select('*');
       
@@ -48,25 +49,36 @@ class AttendanceController extends Controller
                     return date('dS M-Y',strtotime($row->created_at));
                 })
                 ->addColumn('in_time', function($row){
-                    return date('H:mA',strtotime($row->attend_time)); 
+                    return date('h:i a',strtotime($row->attend_time)); 
                 })
 
                 ->addColumn('out_time', function($row){
-
                     if($row->leave_time==null){
-                        return ' ';
+                        return '';
                     }else{
-                        return date('H:mA',strtotime($row->leave_time)); 
-                    } 
-
-                    
-                })
+                        return date('h:i a',strtotime($row->leave_time)); 
+                    }
+                   
+                }) 
 
               ->addColumn('worked', function($row){ 
-                  if($row->leave_time==null){
-                     return '';
+                if($row->leave_time==null){
+                    $in_time = date_create($row->attend_time);
+                    $out_time = date_create();  
+                    if($out_time->diff($in_time)->format('%h')>1){
+                        return $work_time = $out_time->diff($in_time)->format('%h Hours %i Minutes');
+                    }else{
+                        return $work_time = $out_time->diff($in_time)->format('%i Minutes');
+                    } 
                   }else{
-                    return date('H:G:i', date('now') - strtotime($row->attend_time));
+                    $in_time = date_create($row->attend_time);
+                    $out_time = date_create($row->leave_time); 
+                     if($out_time->diff($in_time)->format('%h')>1){
+                        return $work_time = $out_time->diff($in_time)->format('%h Hours %i Minutes');
+                    }else{
+                        return $work_time = $out_time->diff($in_time)->format('%i Minutes');
+                    } 
+                 
                   } 
                 
                 })
